@@ -1,0 +1,2 @@
+# Unified-diff context whitespace is part of the patch payload.
+*.patch -whitespace
