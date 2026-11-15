@@ -1,0 +1,45 @@
+--- a/build.sh
++++ b/build.sh
+@@ -21,7 +21,8 @@
+ 	# pwgr: the binary defines getpwnam/getpwuid/getgrnam/getgrgid itself
+ 	$CC $AMIX_CFLAGS -c "$COMMON/amix-pwgr.c" -o "$BUILD/amix-pwgr.o"
+ 	$CC $AMIX_CFLAGS -I"$HERE/port/include" -c "$HERE/port/amix-compat.c" -o "$BUILD/amix-compat.o"
+-	export LIBS="$BUILD/amix-pwgr.o $BUILD/amix-compat.o -lgen -lsocket -lnsl"
++	$CC $AMIX_CFLAGS -c "$HERE/port/amix-grantpt.c" -o "$BUILD/amix-grantpt.o"
++	export LIBS="$BUILD/amix-pwgr.o $BUILD/amix-compat.o $BUILD/amix-grantpt.o -lgen -lsocket -lnsl"
+ }
+ 
+ post_configure() {
+--- a/port/amix-compat.h
++++ b/port/amix-compat.h
+@@ -44,3 +44,7 @@
+ char *ptsname(int);
+ 
+ #endif
++
++/* Isolated Stage6 SSH fix: libc grantpt wait is signal-interruptible. */
++int amix_grantpt(int);
++#define grantpt amix_grantpt
+--- a/port/amix-grantpt.c
++++ b/port/amix-grantpt.c
+@@ -0,0 +1,20 @@
++
++/* Keep the server SIGCHLD handler from interrupting libc's helper wait.
++ * Restore its original mask and errno on every path. Other EINTR sources
++ * get at most three attempts. The wrapper preserves libc ownership checks. */
++#undef grantpt
++#include <signal.h>
++#include <errno.h>
++extern int grantpt(int);
++int amix_grantpt(int fd) {
++    sigset_t blocked, saved;
++    int rc, saved_errno, tries=0;
++    sigemptyset(&blocked);
++    sigaddset(&blocked,SIGCHLD);
++    if(sigprocmask(SIG_BLOCK,&blocked,&saved)<0)return -1;
++    do { rc=grantpt(fd); } while(rc<0 && errno==EINTR && ++tries<3);
++    saved_errno=errno;
++    if(sigprocmask(SIG_SETMASK,&saved,0)<0)return -1;
++    errno=saved_errno;
++    return rc;
++}

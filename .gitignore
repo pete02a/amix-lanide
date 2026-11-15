@@ -1,0 +1,9 @@
+/build/
+/src/build/
+*.o
+*.img
+*.hdf
+*.rom
+*.adf
+*.iso
+*.core

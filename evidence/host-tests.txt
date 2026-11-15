@@ -1,0 +1,5 @@
+Export verification, 2026-11-15
+Commands: make check-sources test sanitize
+Seven original source files: SHA-256 OK
+PASS: 412 lifecycle cases; asynchronous TX, RX wrap, quiesce/reopen, IRQ/PHY/reset-write allowlist
+PASS: 412 lifecycle cases; asynchronous TX, RX wrap, quiesce/reopen, IRQ/PHY/reset-write allowlist

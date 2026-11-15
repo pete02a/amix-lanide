@@ -1,0 +1,23 @@
+diff --git a/kernel/dlm/abi/registry/majors b/kernel/dlm/abi/registry/majors
+index ae8f12d0..a70b348d 100644
+--- a/kernel/dlm/abi/registry/majors
++++ b/kernel/dlm/abi/registry/majors
+@@ -18,3 +18,6 @@ c 54 paula
+ c 55 zz9ksvc
+ # b 20: the RAM-disk module, kernel/modules' ramdisk
+ b 20 ramdisk
++
++# LANIDE local development provider, verified empty switch row
++c 56 lanide
+diff --git a/kernel/dlm/kbootset/kreg.c b/kernel/dlm/kbootset/kreg.c
+index 310c50d0..8bfc3a03 100644
+--- a/kernel/dlm/kbootset/kreg.c
++++ b/kernel/dlm/kbootset/kreg.c
+@@ -17,6 +17,7 @@ static const struct { int type, n; const char *name; } reg[] = {
+ 	{ 'c', 54, "paula" },
+ 	{ 'c', 55, "zz9ksvc" },
+ 	{ 'b', 20, "ramdisk" },
++	{ 'c', 56, "lanide" },
+ 	{ 0, 0, 0 }
+ };
+ 

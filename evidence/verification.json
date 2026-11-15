@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-15",
+  "stable_source": "ef82049d78c501cf4381ac07d8d742b8856c9aa1",
+  "source_snapshot_sha256": "evidence/stable-sources.sha256",
+  "verification_this_export": {
+    "source_hashes": "PASS",
+    "host_cases": 412,
+    "address_undefined_sanitizers": "PASS",
+    "registry_patch_on_pinned_base": "PASS",
+    "root_makefile_module_simulation_userland": "PASS",
+    "module_checks": [
+      "modcheck: lanide: ok (k46.1.2, boot, 12092 bytes)",
+      "modcheck: lanide: ok (k46.1.2, boot, 12116 bytes)"
+    ],
+    "production_rebuilt_sha256": "e406881216f7ba472fac0b5d32e5c38de25281ba51c2fe1ae1c3d457582d0f47",
+    "simulation_rebuilt_sha256": "ac02d23673fa59217b4c9aaeb4af3370a4ffd32374209a6a919ba9c50193154f",
+    "both_modules_equal_prior_accepted_artifacts": true
+  },
+  "prior_acceptance": {
+    "native_no_mmio_dlpi_cases": 82,
+    "physical_a3000": "DHCP, IP/ARP, SSH, FTP checksum roundtrips, automatic boot confirmed",
+    "ftp_sizes_bytes": [
+      1024,
+      65536,
+      1048576,
+      8388608
+    ],
+    "long_term_stress": "NOT_ESTABLISHED"
+  },
+  "limits": [
+    "Uses existing verified cross toolchain and generated kit, not a clean full bootstrap",
+    "Rejected TX optimization excluded",
+    "No hardware changes or reboot performed for publication",
+    "No images, binaries, credentials, host keys or private raw logs included"
+  ]
+}
