@@ -1,0 +1,28 @@
+{
+  "publication_date": "2026-11-16",
+  "status": "REJECTED_ON_REAL_HARDWARE",
+  "stable_base_commit": "107953898f9e84ca317393edbbd14a7a30a716d2",
+  "source_manifest": "evidence/rejected-early-tx-sources.sha256",
+  "rechecked_for_publication": {
+    "candidate_six_source_files_byte_identical": true,
+    "source_hashes": "PASS",
+    "host_cases": 417,
+    "asan_ubsan": "PASS",
+    "diff_whitespace": "PASS"
+  },
+  "historical_tests_not_rerun_for_publication": {
+    "native_sim_dlpi_cases": 82,
+    "production_absence": "ENXIO_NO_MMIO_PASS",
+    "module_checks": "PASS"
+  },
+  "physical_candidate_result": "FAIL: no router response or SSH; cause unresolved; no throughput improvement established",
+  "recovery": "Gen2 SSH and router ping verified on 2026-11-15; Gen3 rejected",
+  "publication_excludes": [
+    "binaries",
+    "images",
+    "ROMs",
+    "credentials",
+    "private raw logs"
+  ],
+  "hardware_changes_for_publication": false
+}

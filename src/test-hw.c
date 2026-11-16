@@ -90,7 +90,27 @@ static void recovery_tests(void){
  }
 }
 
-int main(void){unsigned int i,p,n;unsigned long k;unsigned char b[1514],out[1514];
+static void earlytx_tests(void){
+ unsigned char b[60]={0};unsigned int i;unsigned long before;
+ reset();assert(lanide_hw_txpoll()==EIO);finish();
+ reset();assert(!lanide_hw_attach(0)&&!lanide_hw_start());
+ assert(!lanide_hw_send(b,60));before=writes;
+ for(i=0;i<1000;i++)assert(!lanide_hw_txpoll()&&lanide_hw_txbusy);
+ assert(writes==before&&txage==0&&!lanide_hw_timeouts);
+ complete=1;assert(!lanide_hw_txpoll()&&!lanide_hw_txbusy&&lanide_hw_txok==1);
+ assert(!lanide_hw_txpoll()&&lanide_hw_txok==1);
+ assert(!lanide_hw_send(b,60));txabort=complete=1;
+ assert(!lanide_hw_txpoll()&&!lanide_hw_txbusy&&lanide_hw_txerr==1&&lanide_hw_txok==1);finish();
+ reset();assert(!lanide_hw_attach(0)&&!lanide_hw_start());assert(!lanide_hw_send(b,60));
+ for(i=0;i<9;i++){assert(!lanide_hw_tick());assert(!lanide_hw_txpoll());}
+ assert(txage==9&&!lanide_hw_timeouts);assert(!lanide_hw_tick()&&lanide_hw_timeouts==1);
+ assert(!lanide_hw_txpoll()&&!lanide_hw_txbusy&&lanide_hw_txerr==1);finish();
+ reset();assert(!lanide_hw_attach(0)&&!lanide_hw_start());assert(!lanide_hw_send(b,60));rg[ix(EIE)]=1;
+ assert(lanide_hw_txpoll()==EIO&&lanide_hw_failed==EIO&&!lanide_hw_running);rg[ix(EIE)]=0;finish();
+ reset();assert(!lanide_hw_attach(1)&&!lanide_hw_start());assert(!lanide_hw_send(b,60));
+ assert(!lanide_hw_txpoll()&&lanide_hw_txbusy&&!lanide_hw_txok);assert(!lanide_hw_tick()&&!lanide_hw_txbusy&&lanide_hw_txok==1);finish();
+}
+int main(void){earlytx_tests();unsigned int i,p,n;unsigned long k;unsigned char b[1514],out[1514];
  for(i=0;i<1514;i++)b[i]=i;
  reset();present=0;assert(lanide_hw_attach(0)==ENXIO&&!maps&&!writes);finish();
  reset();test_cpu=30;assert(lanide_hw_attach(0)==ENODEV&&!maps);finish();

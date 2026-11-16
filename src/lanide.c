@@ -137,11 +137,12 @@ static void proto(q,m) queue_t *q;mblk_t *m;
 static int wsrv(q) queue_t *q;
 {
  mblk_t *m,*part;dl_unitdata_req_t *u;struct endpoint *slt=(struct endpoint *)q->q_ptr;
- int e,n,total,s;
+ int e,n,total,s,budget=4;
  if(!slt)return 0;
- while((m=getq(q))!=0){
+ while(budget--&&(m=getq(q))!=0){
   s=spl6();
   if(slt->state!=DL_IDLE){splx(s);freemsg(m);continue;}
+  if(lanide_hw_txbusy&&(e=lanide_hw_txpoll())){putbq(q,m);splx(s);break;}
   if(lanide_hw_txbusy){putbq(q,m);splx(s);break;}
   u=(dl_unitdata_req_t *)m->b_rptr;
   bcopy((char *)m->b_rptr+u->dl_dest_addr_offset,(char *)txbuf,6);bcopy((char *)lanide_hw_mac,(char *)txbuf+6,6);

@@ -31,4 +31,4 @@ userland:
 	$(CROSS_CC) -O -traditional -m68040 -static -o $(BUILD)/lanctl src/lanctl.c
 
 check-sources:
-	sha256sum -c evidence/stable-sources.sha256
+	sha256sum -c evidence/rejected-early-tx-sources.sha256

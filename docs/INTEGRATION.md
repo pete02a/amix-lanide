@@ -1,3 +1,7 @@
+> **Archiv-Branch: verworfener Early-TX-Kandidat.** Dieses Dokument beschreibt
+> die stabile Basis; deren Hardwareabnahme gilt nicht für diesen Branch.
+> Aktueller Kandidatenstatus und Änderungen: [README](../README.md).
+
 # Integration in AMIX und automatischer LAN-Start
 
 Dies beschreibt die erfolgreich umgesetzte Vollimage-Integration. Es ist

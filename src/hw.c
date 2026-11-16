@@ -126,10 +126,27 @@ int lanide_hw_stop()
  put(EIR+0x180,15);lanide_hw_txbusy=0;return 0;
 }
 void lanide_hw_halt(){lanide_hw_running=0;if(regs)put(ECON1+0x180,3);}
+/* Opportunistic TX completion. No waiting and NO timeout-age increment.
+ * Only the real timer callback is allowed to age a busy transmission. */
+int lanide_hw_txpoll()
+{
+ unsigned int st,c,f;
+ if(!lanide_hw_running||lanide_hw_failed)return EIO;
+ if(!lanide_hw_txbusy||lanide_hw_sim)return 0;
+ st=reg(ESTAT);c=reg(ECON1);
+ if((st&0x1a00)!=0x1a00||!(c&1)||(c&0xc8e0)||(reg(EIE)&0x7fef)||(reg(ECON2)&0xf0)||!(reg(ECON2)&0x8000)||(reg(0x7e40)&0x10)){
+  lanide_hw_failed=EIO;lanide_hw_halt();return EIO;
+ }
+ if(c&2)return 0;
+   f=reg(EIR);
+   if(txage<100){if((f&12)==8&&!(reg(0x7e12)&0x710))lanide_hw_txok++;else lanide_hw_txerr++;}
+   put(EIR+0x180,12);lanide_hw_txbusy=0;txage=0;
+ return 0;
+}
 /* One scheduler tick: supervise completion/abort, no waits inside callout. */
 int lanide_hw_tick()
 {
- unsigned int st,c,f;
+ unsigned int st,c;
  if(!lanide_hw_running)return EIO;
  if(lanide_hw_sim){if(lanide_hw_txbusy){lanide_hw_txbusy=0;lanide_hw_txok++;}return 0;}
  st=reg(ESTAT);c=reg(ECON1);
@@ -141,9 +158,7 @@ int lanide_hw_tick()
    if(++txage>=10){put(ECON1+0x180,2);lanide_hw_timeouts++;lanide_hw_txerr++;txage=100;}
    if(txage>=100&&(reg(ECON1)&2)){lanide_hw_failed=EIO;lanide_hw_halt();return EIO;}
   }else{
-   f=reg(EIR);
-   if(txage<100){if((f&12)==8&&!(reg(0x7e12)&0x710))lanide_hw_txok++;else lanide_hw_txerr++;}
-   put(EIR+0x180,12);lanide_hw_txbusy=0;txage=0;
+   if(lanide_hw_txpoll())return EIO;
   }
  }
  if(!lanide_hw_txbusy&&(st&0x100)&&duplex!=(st&0x400))duplex_set(st);
