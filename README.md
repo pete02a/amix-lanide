@@ -4,6 +4,10 @@ Persistenter **STREAMS/DLPI-Treiber für die Zorro-LAN-IDE-Netzwerkkarte mit
 ENC624J600**. Der hier veröffentlichte Stand ist der funktionierende RX-Fix vom
 15. November 2026, nicht der später verworfene Performanceversuch.
 
+## Vorbereitung auf amigaux 1.1.2
+
+Der separate [Kompatibilitätsbranch `compat/amigaux-1.1.2-c57`](https://github.com/pete02a/amix-lanide/tree/compat/amigaux-1.1.2-c57) enthält den c57-Port, Registry-/Composer-Patch, Paketrezepte und Testnachweise. **Noch keine c57-Hardwarefreigabe und kein vollständiges 1.1.2-Upgrade.** Der offizielle Zielkernel bleibt unverändert; c56 gehört dort X-Surf. Der hier auf `main` verbleibende c56-Treiber ist für die bisherige eigene Basis bestimmt, nicht unverändert für 1.1.2.
+
 ## Geprüfter Stand
 
 Auf einem **echten Amiga 3000 mit CyberStorm Mk II, 68040 und 64 MiB RAM**
