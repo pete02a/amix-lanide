@@ -1,3 +1,19 @@
+# LANIDE c57 – amigaux-1.1.2-Kompatibilitätsbranch
+
+**Vorbereitung, keine Hardwarefreigabe für 1.1.2.** Dieser Branch enthält den stabilen RXfix mit lokalem Major57; Major56 bleibt dem upstream X-Surf-Treiber. Der offizielle Kernel bleibt unverändert. Keine Performanceoptimierung.
+
+→ [Vollständiger Portbericht, Build, Paketintegration, Nachweise und Grenzen](compat/amigaux-1.1.2/README.md)
+
+Der bisher hardwaregeprüfte c56-Stand bleibt auf [main](https://github.com/pete02a/amix-lanide/tree/main). Historische Abnahme und Buildanleitungen unter docs/ beziehen sich auf diesen alten Stand, sofern nicht anders markiert; sie sind **keine c57-Installationsanleitung**.
+
+```sh
+make check-sources test sanitize
+```
+
+Die lokale Host-Hardwaremodellprüfung umfasst412Fälle. Historische Integrationsprüfungen des c57-Portprojekts (892Composer-Hostchecks,82nativeDLPI) sind davon getrennt dokumentiert. Kein vollständiges1.1.2-OS-Upgrade und kein echter c57-Hardwaretest.
+
+## Historischer stabiler c56-Stand (Referenz, nicht Branchkonfiguration)
+
 # AMIX LANIDE Ethernet-Treiber
 
 Persistenter **STREAMS/DLPI-Treiber für die Zorro-LAN-IDE-Netzwerkkarte mit

@@ -1,3 +1,5 @@
+> Historischer c56-Stand. Für diesen c57-Branch gilt stattdessen der [1.1.2-Portbericht](../compat/amigaux-1.1.2/README.md). Keine alte c56-Installation auf1.1.2 übernehmen.
+
 # Abnahme – Stand 15. November 2026
 
 ## 1. Hostmodell

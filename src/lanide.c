@@ -253,6 +253,6 @@ static int lanide_unload()
 static void lanide_halt()
 {int s=spl6();cancelpoll();lanide_hw_halt();splx(s);}
 struct mod_drv_data lanide_drvdata[]={
- {{0},0,0,{0,0,0,0,0,0,0,0,0,0,(struct tty *)0,&lanideinfo,(int *)0},56,1}
+ {{0},0,0,{0,0,0,0,0,0,0,0,0,0,(struct tty *)0,&lanideinfo,(int *)0},57,1}
 };
 MOD_DRV_WRAPPER(lanide,lanide_load,lanide_unload,lanide_halt,"LANIDE polled STREAMS DLPI lan0");

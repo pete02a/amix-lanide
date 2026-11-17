@@ -1,0 +1,11 @@
+PKG=lanide46
+NAME=LANIDE stable RXfix c57 compatibility module
+ARCH=Amiga
+VERSION=1.0.0-20261117
+CATEGORY=system
+CLASSES=none
+VENDOR=local
+PSTAMP=openclaw-lanide-c57-20261117
+APKG_KBOOTSET=1.1.0.261117-0
+APKG_DESC=Stable LANIDE RXfix module, local c57 compatibility port; no throughput optimization.
+DESC=Private k46 STREAMS DLPI LANIDE module using c57, requires the matching private kbootset manifest registry. No hardware function change.

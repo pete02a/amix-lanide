@@ -1,0 +1,12 @@
+{
+  "publication_date": "2026-11-17",
+  "scope": "sources/documentation/recipes only; no binaries or hardware changes",
+  "source_hash_check": "PASS",
+  "host_model_cases": 412,
+  "host_model": "PASS",
+  "ASan_UBSan": "PASS 412 cases",
+  "source_delta_vs_stable_main": "Only drv_cmajor and Master major change in driver sources; hardware backend byte-identical",
+  "historical_integration": "892 Composer host / 82 native DLPI; not rerun for publication",
+  "full_upgrade": "NOT_RUN",
+  "c57_hardware": "NOT_RUN"
+}
