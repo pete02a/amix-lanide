@@ -1,3 +1,17 @@
+# Aktuelle Quellen / AMIX1.1.2
+
+- Offizielle Basis: [amigaux/amix](https://github.com/amigaux/amix/tree/ec9dfd6e57070fddd8a34b8cb83236257ecf0ecf), `ec9dfd6e57070fddd8a34b8cb83236257ecf0ecf`.
+- Lokale c57-Erweiterung vollständig als `compat/amigaux-1.1.2/amix-1.1.2-c57.patch`; private Endquelle `2b3a100f27b7dfded7541f9b25de5a48d3c1081d` ist Provenienz, keine versprochene öffentliche Gitabhängigkeit.
+- Treiber: stabiler RX-Fix aus der bisherigen c56-Linie, zwei Major-Anpassungen, vollständige aktuelle Quelle unter `src/`; SHA-Bindung `evidence/c57-sources.sha256`.
+- Produktionsmodul14855B SHA256 `4cab27b0e9dc24c828f67f3fcbad8c202048009078076fa2569df8bc045e8c29`; Simulator14899B `89c4b54acb3ad1482fd1a4a5f24bbec23810d0b19578ecb515a9e142e24fc96d`.
+- Offizieller Kernel67 SHA256 `454d5d652d25a7862601352d64b41164ea5db03975535b3076a9371db1545799`, unverändert. Compiler-/Toolkettenpins stehen unten und im Portbericht.
+
+`evidence/artifacts.sha256`, `stable-sources.sha256` und der folgende ursprüngliche Quellenbericht bleiben c56-Historie. `make check-sources` benutzt jetzt die c57-Liste. Private Paket-/Composerhashes sind Referenzen, keine veröffentlichten offiziellen Binaries. Aktuelle Veröffentlichungsnachweise werden separat erfasst.
+
+---
+
+> Historischer c56-Stand. Für diesen c57-Branch gilt stattdessen der [1.1.2-Portbericht](../compat/amigaux-1.1.2/README.md). Keine alte c56-Installation auf1.1.2 übernehmen.
+
 # Quellen, Pins und Artefakte
 
 ## Primärquellen

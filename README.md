@@ -1,88 +1,43 @@
-# AMIX LANIDE Ethernet-Treiber
+# AMIX LANIDE Ethernet — AMIX 1.1.2 / c57
 
-Persistenter **STREAMS/DLPI-Treiber für die Zorro-LAN-IDE-Netzwerkkarte mit
-ENC624J600**. Der hier veröffentlichte Stand ist der funktionierende RX-Fix vom
-15. November 2026, nicht der später verworfene Performanceversuch.
+Aktueller Stand auf `main`: **stabiler RX-Fix mit der AMIX-1.1.2-Kompatibilitätsanpassung auf Character-Major57**. Schnittstelle `lan0`, Karte Zorro-LAN-IDE/ENC624J600. Kein Early-TX-/Performancekandidat und kein Zorro-III-Kompatibilitätsfix.
 
-## Vorbereitung auf amigaux 1.1.2
+Der Datenpfad ist unverändert zum funktionierenden RX-Fix vom15.11.2026. Die beiden Treiberänderungen betreffen ausschließlich die Major-Nummer in `Master` und im DLM-Wrapper. Unter AMIX1.1.2 bleibt c56 für X-Surf; der offizielle Kernel67 bleibt bytegleich.
 
-Der separate [Kompatibilitätsbranch `compat/amigaux-1.1.2-c57`](https://github.com/pete02a/amix-lanide/tree/compat/amigaux-1.1.2-c57) enthält den c57-Port, Registry-/Composer-Patch, Paketrezepte und Testnachweise. **Noch keine c57-Hardwarefreigabe und kein vollständiges 1.1.2-Upgrade.** Der offizielle Zielkernel bleibt unverändert; c56 gehört dort X-Surf. Der hier auf `main` verbleibende c56-Treiber ist für die bisherige eigene Basis bestimmt, nicht unverändert für 1.1.2.
+## Nachweisstand
 
-## Geprüfter Stand
+- Reale c57-Funktion auf A3000/CyberStorm MkII68040/64MiB wurde nach der 1.1.2-Integration beobachtet: ohne ZZ9000 Router-Ping nach Starts; mit ZZ9000/ZorroII funktionierender Betrieb. Am21.11. waren Route über lan0, Router-Ping, SSH und begrenzter FTP-Verkehr direkt nachweisbar.
+- **Nicht gelöst:** LANIDE-Ausfälle in der früheren Kombination mit ZZ9000/ZorroIII. Der c57-Port beseitigt keinen nachgewiesenen Bus-/Firmwarefehler. LANIDE ist inzwischen aus dem Zielrechner entfernt; diese Veröffentlichung löst keine neuen Hardwaretests aus.
+- Der alte c56-Stand hatte ausführliche DHCP-/Autostart-/Hashtransfer-/ECS-X-Belege. Diese werden **nicht rückwirkend als neue c57-Tests** ausgegeben.
+- Aktuelle Softwareprüfungen:412 Hostmodellfälle und ASan/UBSan; getrennte Produktions-/Simulationsbuilds. Historische c57-Integration:892 Composer-Hostchecks und82 native No-MMIO-DLPI-Prüfungen. Kein unbegrenzter Dauerlast- oder vollständiger OS-Upgrade-Nachweis.
 
-Auf einem **echten Amiga 3000 mit CyberStorm Mk II, 68040 und 64 MiB RAM**
-unter AMIX/Amiga UNIX 2.1c mit dem AMIX-1.1-k46-DLM-Unterbau bestätigt:
+Details: [Abnahme](docs/ACCEPTANCE.md), [c57-Portbericht](compat/amigaux-1.1.2/README.md), [aktueller bereinigter Hardwarebeleg](evidence/amigaux112-hardware-20261121.json).
 
-- Ethernet in beide Richtungen, IP/ARP und DHCP.
-- Automatischer Start von LAN und SSH nach dem Einschalten, ohne `run-net`.
-- Router-, DNS- und Internet-Ping sowie SSH-Anmeldung mit Terminal.
-- FTP-Dateien mit 1 KiB, 64 KiB, 1 MiB und 8 MiB herunter- und zurückgeladen;
-  alle Rückübertragungen SHA-256-identisch.
-- Etwa **110 KB/s Download und 82 KB/s Upload** bei 8 MiB. Das sind
-  beobachtete FTP-Clientwerte, keine zugesicherte Geschwindigkeit.
-- Natives ECS-X (`xstart card=native`) funktioniert im integrierten Vollimage
-  weiterhin; die Grafikkonfiguration wurde dafür nicht verändert.
-
-**Kein Langzeit-Stabilitätsnachweis:** Die erfolgreichen Abnahmen und die
-Grenzen sind in [Hardwareabnahme](docs/ACCEPTANCE.md) getrennt aufgeführt.
-
-## Schnellstart für Entwickler
-
-Ohne AMIX oder Karte auf einem Linux-Host:
+## Entwicklereinstieg
 
 ```sh
-make check-sources
-make test
-make sanitize
+make check-sources test sanitize
+# Passende period-Cross-Toolchain und generiertes c57-k46-Kit:
+make module KIT=/absolute/path/to/c57/k46-kit
+make simulation KIT=/absolute/path/to/c57/k46-kit
+make userland
 ```
 
-Dies prüft **412 Hardwaremodell-Fälle**, nicht die komplette STREAMS-Schicht
-und nicht die echte Karte. Für Kernelmodul und `lanctl` werden eine passende
-AMIX-Cross-Toolchain und ein generiertes k46-DLM-Kit benötigt:
-[Buildanleitung](docs/BUILD.md).
+Produktionsmodul:14855Bytes, SHA256 `4cab27b0e9dc24c828f67f3fcbad8c202048009078076fa2569df8bc045e8c29`. Simulator und echte Hardware sind strikt getrennt; niemals den Simulator ins Hardwareimage übernehmen.
 
-## Inhalt
+[Build](docs/BUILD.md) · [Integration](docs/INTEGRATION.md) · [Architektur](docs/ARCHITECTURE.md) · [Entwicklung](docs/DEVELOPMENT.md) · [Quellen](docs/SOURCES.md)
 
-| Pfad | Inhalt |
-| --- | --- |
-| `src/lanide.c` | STREAMS/DLPI-Provider, acht Streams und SAP-Demultiplexing |
-| `src/hw.c`, `src/hw.h` | MMIO/SRAM, TX/RX, Ringvalidierung und Lebenszyklus |
-| `src/status.h`, `src/lanctl.c` | Status-IOCTL und native Abfrage/Simulationstests |
-| `src/test-hw.c` | Host-Hardwaremodell mit Fehlerfallprüfungen |
-| `src/Master` | Bootklasse, Kartenkennung, Major 56, kein Entladen |
-| `patches/` | AMIX-Major-/Composer-Registrierung und separater SSH-PTY-Fix |
-| `config/` | Globale Linkdefinition und Bootmanifest-Fragment |
-| `archive/kernel-build/` | Historische Kernel-Buildschritte, kein Installer |
-| `evidence/` | Quell-/Artefakthashes und bereinigter Prüfstand |
+## Zusammengehörige Integration
 
-## Installation und Betrieb
+Privater c57-Composer/Registry, passendes Kit, Modul, **Bootmanifest-Majortabelle**, `/dev/lan0`57,0 und globale `link.d/lanide` müssen übereinstimmen. Ein neuer Kernel nur für die Majornummer ist bei der gepinnten1.1.2-Basis nicht nötig. Die lokale Nummer ist keine dauerhafte Upstream-Reservierung; die privaten Paketversionen sind keine offiziellen Releases.
 
-Ein Modul allein reicht nicht: **Character-Major 56 muss im Kernel und im
-Boot-Composer registriert sein.** Passender Kernel, UFS-Modul, Registry und
-Bootmanifest gehören zusammen. Siehe [Integration](docs/INTEGRATION.md).
+Der reguläre AMIX-Netzstart kann über `inetinit`/`ifup`/`dhcpc` erfolgen; keine neue Startschleife. Root-/Controller-/Generationswerte aus Beispielen nie unverändert auf einen anderen Rechner übernehmen.
 
-Im integrierten System genügt zum Prüfen:
+## Historie und Abgrenzung
 
-```sh
-/opt/lanide/bin/lanctl
-/usr/sbin/ifconfig lan0
-```
+- [Legacy c56 vor1.1.2](https://github.com/pete02a/amix-lanide/tree/legacy/c56-before-1.1.2): alter funktionierender Stand mit seinen damaligen Build-/Abnahmebelegen.
+- [Kompatibilitätsvorbereitung](https://github.com/pete02a/amix-lanide/tree/compat/amigaux-1.1.2-c57): unveränderter historischer Vorbereitungsbranch; `main` enthält nun c57 plus aktualisierte Dokumentation.
+- [Verworfener Early-TX-Versuch](https://github.com/pete02a/amix-lanide/tree/archive/rejected-early-tx-20261115): ausdrücklich kein funktionierendes Update, nicht nach `main` übernommen.
+- [ZZ9000-LAN-Entwicklung](https://github.com/pete02a/amix-zz9000-lan) ist ein getrenntes Projekt.
 
-`SIM=0`, `RUNNING=1`, `ERROR=0` und erfolgreicher Datenverkehr sind gemeinsam
-maßgeblich. `RXERR`/`DROPPED` können beim Verwerfen fehlerhafter Frames steigen.
-Die Zähler allein beweisen keine funktionierende Verbindung.
-
-## Grenzen
-
-- Polling, **kein Interruptbetrieb**, vier verbrauchte RX-Frames pro Systemtick.
-- Ein TX-Puffer; keine in diesem Stand abgenommene Leistungsoptimierung.
-- Kein Controller-Reset und keine PHY-/EIE-/Board-IRQ-Schreibzugriffe.
-- `unload never`: kein Austausch des aktiven Moduls im laufenden System.
-- Die angegebene Karte/68040-Konfiguration ist geprüft; daraus folgt keine
-  Abnahme aller LAN-IDE-Revisionen, Clockportvarianten oder 68060-Systeme.
-- Die experimentelle eigene Kernel-Build-ID ist kein offizielles AMIX-Release.
-- SD-Images, Kernel-/UFS-/SSH-Binaries, ROMs, private Logs und Zugangsdaten
-  sind nicht Bestandteil dieses Quellpakets.
-
-[Architektur](docs/ARCHITECTURE.md) · [Entwicklungsverlauf](docs/DEVELOPMENT.md)
-· [Quellen und Pins](docs/SOURCES.md)
+Keine SD-Images, Kernel-/UFS-/SSH-Binaries, ROMs, privaten Rohlogs oder Zugangsdaten in diesem Repository. Polling und ein einzelner TX-Puffer bleiben; kein Interrupt-, PHY-, Reset- oder Leistungsoptimierungsauftrag ist hier enthalten.

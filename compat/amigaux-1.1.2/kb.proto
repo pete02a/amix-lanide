@@ -1,0 +1,22 @@
+d none /dev 0755 bin bin
+c kinfo /dev/kinfo 53 0 0444 root sys
+d none /etc 0755 root root
+d none /etc/init.d 0755 bin bin
+f none /etc/init.d/kbmarkgood=/opt/compat112/pkginput/kbroot/etc/init.d/kbmarkgood 0744 root sys
+f none /etc/init.d/kbnamelist=/opt/compat112/pkginput/kbroot/etc/init.d/kbnamelist 0744 root sys
+d none /etc/rc2.d 0755 bin bin
+l none /etc/rc2.d/S01kbnamelist=/etc/init.d/kbnamelist
+l none /etc/rc2.d/S99zkbootset=/etc/init.d/kbmarkgood
+d none /opt 0755 root sys
+d none /opt/amix 0755 root sys
+d none /opt/amix/man 0755 root sys
+d none /opt/amix/man/1m 0755 root sys
+f none /opt/amix/man/1m/kbootset=/opt/compat112/pkginput/kbroot/opt/amix/man/1m/kbootset 0644 root bin
+d none /opt/amix/man/whatis.d 0755 root sys
+f none /opt/amix/man/whatis.d/kbootset=/opt/compat112/pkginput/kbroot/opt/amix/man/whatis.d/kbootset 0644 root bin
+d none /sbin 0755 bin bin
+f none /sbin/kbootset=/opt/compat112/pkginput/kbroot/sbin/kbootset 0755 root bin
+d none /var 0755 bin bin
+d none /var/kbootset 0755 root sys
+i copyright=/opt/compat112/pkginput/copyright
+i pkginfo=/opt/compat112/pkginput/kb.pkginfo

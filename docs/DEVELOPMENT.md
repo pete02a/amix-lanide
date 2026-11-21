@@ -1,3 +1,13 @@
+# Entwicklungsstand AMIX1.1.2 / c57
+
+`main` übernimmt den am17.11. vorbereiteten c57-Port und die nachfolgenden Funktionsbeobachtungen. `hw.c`/`hw.h`, Ring-/RX-Fix und Polling bleiben unverändert; nur `Master` und DLM-Wrapper verwenden57 statt56. X-Surf behält56, der offizielle Kernel67 bleibt bytegleich. Composer/Kit/Manifest/Node/link.d werden gemeinsam angepasst, kein Kernelneubau und keine neue Leistungsoptimierung.
+
+Die bisherige c56-Fassung ist auf `legacy/c56-before-1.1.2` erhalten. `compat/amigaux-1.1.2-c57` bleibt der historische Vorbereitungsbranch. Der verworfene Early-TX-Branch bleibt getrennt und wird nicht nachmain übernommen. Die frühere Z3/LANIDE-Störung ist nicht gelöst; der Eigentümer hat LANIDE inzwischen ausgebaut und nutzt das separate ZZ9000-Ethernetprojekt.
+
+Die nachfolgende Entwicklungshistorie beschreibt die ursprüngliche c56-Linie und damalige CLI-/Kernelentscheidungen. Für aktuelle Installation gelten BUILD/INTEGRATION und der1.1.2-Portbericht, nicht alte Rebuildanweisungen.
+
+---
+
 # Entwicklungsverlauf
 
 Die Entwicklung erfolgte in kleinen getrennten Prüfständen; dies ist eine

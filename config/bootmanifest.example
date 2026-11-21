@@ -1,5 +1,5 @@
 # Fragment only, NOT a complete commit spec. Replace N and merge with
 # the existing generation's kernel/root device/modules/parameters.
-# Keep the order of the existing major records unchanged; append c56.
-major c 56 lanide
-module lanide boot 14855 path=/stand/gen/N/mod/lanide sha256=e406881216f7ba472fac0b5d32e5c38de25281ba51c2fe1ae1c3d457582d0f47 match=zorro:0a1c:7b majors=c:56
+# Keep the order of the existing major records unchanged; append the locally allocated c57 (c56 belongs to xsurf).
+major c 57 lanide
+module lanide boot 14855 path=/stand/gen/N/mod/lanide sha256=4cab27b0e9dc24c828f67f3fcbad8c202048009078076fa2569df8bc045e8c29 match=zorro:0a1c:7b majors=c:57

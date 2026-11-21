@@ -1,0 +1,16 @@
+i pkginfo=/opt/compat112/pkginput/lan.pkginfo
+d none /dev 0755 bin bin
+c none /dev/lan0 57 0 0600 root sys
+d none /etc 0755 root root
+d none /etc/conf 0755 root sys
+d none /etc/conf/mod.d 0755 root sys
+f none /etc/conf/mod.d/lanide=/opt/compat112/lanide-prod 0644 root sys
+d none /etc/conf/modreg.d 0755 root sys
+f none /etc/conf/modreg.d/lanide=/opt/compat112/pkginput/lan.modreg 0644 root sys
+d none /etc/inet 0755 root sys
+d none /etc/inet/link.d 0755 root sys
+f none /etc/inet/link.d/lanide=/opt/compat112/lanide.link 0644 root sys
+d none /opt 0755 root sys
+d none /opt/lanide 0755 root sys
+d none /opt/lanide/bin 0755 root sys
+f none /opt/lanide/bin/lanctl=/opt/compat112/lanctl 0755 root sys

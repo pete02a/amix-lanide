@@ -1,0 +1,32 @@
+{
+  "module_sha256": "4cab27b0e9dc24c828f67f3fcbad8c202048009078076fa2569df8bc045e8c29",
+  "module_bytes": 14855,
+  "stable_reference_sha256": "e406881216f7ba472fac0b5d32e5c38de25281ba51c2fe1ae1c3d457582d0f47",
+  "byte_differences": [
+    {
+      "offset": 6879,
+      "old": 56,
+      "new": 57
+    },
+    {
+      "offset": 7271,
+      "old": 54,
+      "new": 55
+    }
+  ],
+  "hw_c_unchanged": true,
+  "official_kernel_unmodified": true,
+  "official_kernel_sha256": "454d5d652d25a7862601352d64b41164ea5db03975535b3076a9371db1545799",
+  "kbootset_sha256": "272fa3901cc0f9ae89af479ba9573d639ef758685b98506f5430e1afa05fc1db",
+  "private_kbootset_rebuild_byte_identical": true,
+  "guest_roundtrip_module_kernel_composer_sim": "PASS",
+  "offline_current_files_and_all_manifest_crc_sha": "PASS",
+  "pristine_generation1_unchanged": true,
+  "default": 5,
+  "trial": 0,
+  "nextboot": 0,
+  "official_release_commit": "ec9dfd6e57070fddd8a34b8cb83236257ecf0ecf",
+  "local_registry_commit": "2b3a100f27b7dfded7541f9b25de5a48d3c1081d",
+  "test_image_only": "Retained on Dev; not a full OS upgrade or a user test-image release",
+  "snapshot_note": "Historical preparation 2026-11-17; later c57 observations and current fresh builds are in ../../evidence/amigaux112-*-20261121.json."
+}

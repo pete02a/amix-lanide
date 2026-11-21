@@ -1,7 +1,7 @@
 $modtype drv
 $class boot
 $match zorro:0a1c:7b
-$majors c:56
+$majors c:57
 $unload never
 $param sim:bool:0
 $desc LANIDE polled STREAMS DLPI lan0

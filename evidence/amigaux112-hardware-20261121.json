@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-21",
+  "scope": "last functioning AMIX1.1.2 c57 RX-fix; no new optimization",
+  "module_sha256": "4cab27b0e9dc24c828f67f3fcbad8c202048009078076fa2569df8bc045e8c29",
+  "official_kernel_sha256": "454d5d652d25a7862601352d64b41164ea5db03975535b3076a9371db1545799",
+  "major": 57,
+  "xsurf_major": 56,
+  "hardware": "A3000/CyberStorm MkII/68040/64MiB",
+  "evidence": [
+    {
+      "date": "2026-11-18",
+      "kind": "owner reports",
+      "result": "router connectivity after starts without ZZ9000; functioning ZZ9000/Z2 setup reported",
+      "limit": "not a new complete automated c57 test suite"
+    },
+    {
+      "date": "2026-11-21",
+      "kind": "direct remote observation before card removal",
+      "result": "route on lan0, router alive, SSH, real LANIDE status and bounded FTP traffic",
+      "SIM": 0,
+      "RUNNING": 1,
+      "ERROR": 0,
+      "TX": 3269,
+      "RX": 4597,
+      "DELIVERED": 3993,
+      "TXERR": 0,
+      "RXERR": 0,
+      "TIMEOUT": 0,
+      "DROPPED": 0,
+      "limit": "comparison deliberately cancelled; no complete benchmark or new hash-roundtrip claim"
+    }
+  ],
+  "unresolved": "earlier LANIDE failures with ZZ9000/ZorroIII; not fixed by c57",
+  "current_machine": "LANIDE removed by owner; no fresh hardware work triggered by publication",
+  "privacy": "private addresses/MAC/photos/raw logs omitted"
+}

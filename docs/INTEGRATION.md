@@ -1,96 +1,37 @@
-# Integration in AMIX und automatischer LAN-Start
+# Integration in AMIX1.1.2 mit c57
 
-Dies beschreibt die erfolgreich umgesetzte Vollimage-Integration. Es ist
-kein universeller Installer und setzt einen zur Registry passenden Kernel,
-UFS, Loader/Composer und ein separat gesichertes Testmedium voraus. Der
-laufende stabile A3000 wird durch dieses Quellpaket nicht verändert.
+Dies ist eine koordinierte Test-/Integrationsreferenz, kein universeller Installer. Die frühere c56-Integration ist im [Legacy-Branch](https://github.com/pete02a/amix-lanide/tree/legacy/c56-before-1.1.2) erhalten.
 
-## Zusammengehörige Komponenten
+## Komponenten
 
-1. Eigener k46-Kernel mit freier, tatsächlich registrierter Character-Major
-   56 (`lanide`), dazugehöriges UFS-Modul und korrekte ABI-/Symboltabellen.
-2. Native `kbootset`-Fassung aus derselben Registry. Nur die Registrydatei
-   zu ändern genügt nicht, wenn der installierte Composer noch das alte
-   generierte `kreg.c` verwendet. Der Patch enthält beide Änderungen.
-3. Produktionsmodul, SHA-gebunden im normalen Bootmanifest:
-   `class=boot`, Match `zorro:0a1c:7b`, `majors=c:56`, kein devload nötig.
-4. `/dev/lan0`: Character 56, Minor 0; Linkdefinition und DHCP-Auswahl.
-5. Separat reparierter SSH-Server, falls die ältere PTY-Störung vorliegt.
+1. Offizieller k46-Kernel `68060-261115-67` unverändert, mit passendem Core-UFS. Kernel-SHA256 `454d5d652d25a7862601352d64b41164ea5db03975535b3076a9371db1545799`.
+2. Privater c57-Composer/Registry und passendes Kit. Corepatch0051 prüft die Majors gegen das **gebootete Manifest**, nicht nur die einkompilierte Fallbacktabelle. Keine Kernel-Binäränderung für diesen Port nötig.
+3. Produktionsmodul im normalen Bootmanifest: Klasseboot, Match `zorro:0a1c:7b`, `majors=c:57`, `sim=0`, `unload never`.
+4. `/dev/lan0`: Character57,Minor0, root-eigener geschützter Node; `/etc/inet/link.d/lanide` aus `config/lanide.link`.
 
-`config/bootmanifest.example` ist nur das LANIDE-Fragment. Generation,
-Kernel, Rootcontroller/-unit/-slice und alle anderen Module/Parameter müssen
-vom tatsächlichen Zielsystem übernommen werden. Keine fremde Build-Spec
-mitsamt fremdem Rootgerät verwenden. Die Reihenfolge der vorhandenen Major-
-Einträge beibehalten und LANIDE ergänzen. Den Inhalt der alten guten
-Rückfallgeneration nicht überschreiben.
+c56 bleibt X-Surf, c68 VA2000. Der Composer muss die Ergänzung tatsächlich enthalten; die Textregistry allein ändert kein bereits installiertes `kreg.c`-Binary. Die Versionsfloors und Paketrezepte stehen unter [compat/amigaux-1.1.2](../compat/amigaux-1.1.2/README.md). Bei Paketinstallation muss der APKG-Client den Modul-kbootset-Floor unterstützen (im dokumentierten Aufbau0.3.13); private Versionen sind keine offiziellen Releases.
 
-Über den nativen Composer wird die neue Generation transaktional gespeichert
-(`commit --spec ...`), danach kontrolliert gebootet und geprüft. Die genaue
-CLI mit der **installierten Fassung** abgleichen. Der hier eingesetzte
-ältere Composer hat `next`, `rollback`, `mark-bad`, aber **kein `default`**.
-Ein normales Boot ohne Entwicklungsfreigabe war Teil der Abnahme.
+`config/bootmanifest.example` enthält nur das Modulfragment. Generation, Rootcontroller/-unit/-slice und alle Referenzdateien werden vom tatsächlichen Ziel übernommen. Nicht eine Emulator-Rootspec übernehmen. Den geladenen Provider nicht in place austauschen; neue Generation nativ transaktional komponieren, SHA/Registry/Node prüfen, danach kontrolliert booten. CLI immer gegen die **installierte** Composerfassung prüfen. Die alte c56-CLI ohne `default` ist keine allgemeine Beschreibung des neueren privaten1.1.2-Composers.
 
-## Globale Linkdefinition und DHCP
-
-`config/lanide.link` muss unter `/etc/inet/link.d/lanide` liegen:
+## Automatischer Netzstart
 
 ```text
-lan /dev/lan 0 56
+# /etc/inet/link.d/lanide
+lan /dev/lan 0 57
 ```
 
-Der AMIX-DHCP-Client liest dieses Verzeichnis fest. Ein privates `IF_CONF`
-für `ifup` allein ersetzt diese globale Linkzuordnung nicht.
-
-Die vorhandene `/etc/inet/interfaces`-DHCP-Regel soll `lan0` erfassen. In
-einem passenden privaten Testprofil lautete die explizite Zeile:
+Die Schnittstelle kann explizit in `/etc/inet/interfaces` gewählt werden:
 
 ```text
-lan0 dhcp
+lan0 dhcp name amix040
 ```
 
-Im geprüften Vollimage blieb die bestehende Wildcard-DHCP-Konfiguration
-unverändert. `inetinit`/`S69inet` ruft `ifup -a` auf; kein zusätzlicher
-LANIDE-Startdaemon und kein manuelles `run-net` sind nötig.
+Der vorhandene `inetinit`/S69inet-Ablauf ruft `ifup -a` auf; kein eigener LANIDE-Startdaemon. Keine Wildcard-DHCP-Zeile als Beweis dafür verwenden, dass gerade die richtige NIC aktiv ist. Einen bestehenden Node mit falscher Major nicht allein wegen seiner Existenz akzeptieren.
 
-Bei der Anlage von Verzeichnissen beachten: Das native alte `mkdir -p`
-war bei existierendem Verzeichnis kein zuverlässiger Startpfad. Die geprüfte
-Form ist eine explizite Existenzprüfung und nur dann einfaches `mkdir`.
+Nach normalem Boot ohne manuelles `run-net`: `lanctl`, tatsächliche DHCP-Adresse/Gateway/DNS/Hosteintrag, Route und Router-Ping/SSH prüfen. `SIM=0,RUNNING=1,ERROR=0` allein beweist keinen funktionierenden Datenpfad. RXERR/DROPPED können beim gezielten Verwerfen fehlerhafter Frames steigen; Zeitverlauf und tatsächlicher Verkehr sind maßgeblich.
 
-## SSH ist eine separate Komponente
+## Abgrenzung
 
-Der abgenommene Dropbear-Build enthält den Signal-/`grantpt`-Fix aus
-`patches/dropbear-grantpt.patch`. Grundlage ist das AMIX-1.1-Dropbear-Rezept
-am in [SOURCES.md](SOURCES.md) genannten Pin, nicht ein unmodifiziertes
-Upstream-Tarball. Das Buildrezept kompiliert die zusätzliche Datei und
-verlinkt sie; vorhandene Paketpatches bleiben bestehen. Der lokale Build
-war kein offizielles Paketrelease.
+Keine Karte wird durch diese Veröffentlichung neu eingebaut oder getestet. Die frühere LANIDE-/ZZ9000-ZorroIII-Störung bleibt ungeklärt; keine neue Z3-Unterstützung. Der Eigentümer betreibt inzwischen ZZ9000-LAN und hat LANIDE entfernt.
 
-Bestehende Accounts und Hostschlüssel bleiben erhalten. Der Server wurde
-über den vorhandenen `S76dropbear`-Dienst auf Port 22 gestartet. Bei einem
-Austausch erst eine **neue Datei** übertragen und atomisch umbenennen;
-ein laufendes Dropbear-Binary nicht in place überschreiben. Die zum
-Multicall-Binary gehörenden Alias-Hardlinks konsistent aktualisieren.
-Das alte native init-Skript unterstützt `start`/`stop`, kein `restart`.
-
-## Abnahme auf Hardware
-
-Nach normalem Start ohne `run-net`:
-
-```sh
-/opt/lanide/bin/lanctl
-/usr/sbin/ifconfig lan0
-# Router-IP des eigenen LANs einsetzen:
-ping ROUTER_IP
-```
-
-DHCP-Adresse, Routerverbindung, DNS-Ziel, SSH-Anmeldung und längere binäre
-Übertragung mit Prüfsummen prüfen. Vorher/nachher Zähler vergleichen.
-`SIM=0`, `RUNNING=1`, `ERROR=0` sind nötig, aber nicht allein hinreichend.
-
-## Was nicht als Teil des Images behauptet wird
-
-Deutsche Konsolenkeymap und SSH-Korn-Shell-Tasten wurden später direkt auf
-der physischen SD eingerichtet und vom Benutzer bestätigt. Sie sind nicht
-in den früher exportierten Vollimagebytes enthalten und sind unabhängig
-vom LANIDE-Treiber. Grafik, X-Start und Benutzerpasswort wurden für die
-LANIDE-Integration nicht umkonfiguriert.
+`patches/dropbear-grantpt.patch` und die alten SSH-/PTY-Abnahmen sind historische, separate Komponenten. Nicht blind einen aktuellen1.1.2-SSH-Server durch den alten privaten Build ersetzen. Bestehende Konten/Hostschlüssel, Grafik, Locale und CDE werden vom LANIDE-Port nicht geändert.
